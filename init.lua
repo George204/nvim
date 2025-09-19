@@ -291,6 +291,13 @@ vim.wo.scrolloff = 8
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
+-- Enable autoread and set up checking triggers
+vim.o.autoread = true
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
+  command = "if mode() != 'c' | checktime | endif",
+  pattern = "*",
+})
+
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
@@ -427,12 +434,12 @@ vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
---uruchom
+--uruchom hubert
 vim.keymap.set('n', '<leader>uc', ":w<cr> :split<cr> :term g++ %:p -o a && start a<cr>",{desc = '[U]ruchom [C]c++'})
-vim.keymap.set('n', '<leader>up', ":w<cr> :split<cr> :term python %:p<cr>",{desc = '[U]ruchom [P]ython'})
-vim.keymap.set('n', '<leader>f', ":Ex<cr>",{desc = '[F]inder'})
+vim.keymap.set('n', '<leader>up', ":w<cr> :split<cr> :term python % <cr>",{desc = '[U]ruchom [P]ython'})
 vim.keymap.set('n', '<leader>f', ":Ex<cr>",{desc = '[F]inder'})
 vim.keymap.set('n', '<leader>sr', ":%s/1/1/g",{desc = '[S]earch [R]eplace'})
+
 -- See `:help nvim-treesitter`
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
 vim.defer_fn(function()
