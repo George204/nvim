@@ -13,7 +13,7 @@ vim.g.have_nerd_font = true
 --  For more options, you can see `:help option-list`
 
 -- Make line numbers default
---vim.o.number = true
+vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 vim.o.relativenumber = true
@@ -83,7 +83,7 @@ vim.o.confirm = true
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 --hubert
-vim.keymap.set('n', '<leader>ec', ':e $myvimrc<cr>', { desc = '[E]dit [C]onfig' })
+vim.keymap.set('n', '<leader>ec', ':e $MYVIMRC<cr>', { desc = '[E]dit [C]onfig' })
 vim.keymap.set('n', '<leader>f', ':Ex<cr>', { desc = '[F]inder' })
 vim.keymap.set('n', '<leader>sr', ':%s/1/1/g', { desc = '[S]earch [R]eplace' })
 vim.keymap.set('n', '<leader>pp', ':w<CR>:term uv run %<CR>', { noremap = false, silent = true })
