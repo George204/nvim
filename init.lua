@@ -86,7 +86,7 @@ vim.o.confirm = true
 vim.keymap.set('n', '<leader>ec', ':e $myvimrc<cr>', { desc = '[E]dit [C]onfig' })
 vim.keymap.set('n', '<leader>f', ':Ex<cr>', { desc = '[F]inder' })
 vim.keymap.set('n', '<leader>sr', ':%s/1/1/g', { desc = '[S]earch [R]eplace' })
-
+vim.keymap.set('n', '<leader>pp', ':w<CR>:term uv run %<CR>', { noremap = false, silent = true })
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -287,7 +287,20 @@ require('lazy').setup({
   -- you do for a plugin at the top level, you can do for a dependency.
   --
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
-
+  {
+    'benomahony/uv.nvim',
+    -- Optional filetype to lazy load when you open a python file
+    -- ft = { python }
+    -- Optional dependency, but recommended:
+    -- dependencies = {
+    --   "folke/snacks.nvim"
+    -- or
+    --   "nvim-telescope/telescope.nvim"
+    -- },
+    opts = {
+      picker_integration = true,
+    },
+  },
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
