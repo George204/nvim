@@ -79,14 +79,18 @@ vim.o.scrolloff = 10
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 vim.o.confirm = true
-
+vim.o.tabstop = 4
+vim.o.shiftwidth = 0
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 --hubert
 vim.keymap.set('n', '<leader>ec', ':e $MYVIMRC<cr>', { desc = '[E]dit [C]onfig' })
-vim.keymap.set('n', '<leader>f', ':Ex<cr>', { desc = '[F]inder' })
+vim.keymap.set('n', '<leader>g', ':Ex<cr>', { desc = '[F]inder' })
 vim.keymap.set('n', '<leader>sr', ':%s/1/1/g', { desc = '[S]earch [R]eplace' })
+vim.keymap.set('n', '<leader>sm', '::setlocal spell spelllang=en_gb<CR>', { desc = '[S]earch [M]istakes' })
 vim.keymap.set('n', '<leader>pp', ':w<CR>:term uv run %<CR>', { noremap = false, silent = true })
+vim.keymap.set('n', '<leader>pi', ':w<CR>:term uv run < input %<CR>', { noremap = false, silent = true })
+vim.keymap.set('n', '<leader>pu', ':w<CR>:term gcc % -o a && ./a<CR>', { noremap = false, silent = true })
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -165,7 +169,7 @@ rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+  --'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -301,6 +305,15 @@ require('lazy').setup({
       picker_integration = true,
     },
   },
+  {
+    'lervag/vimtex',
+    lazy = false, -- we don't want to lazy load VimTeX
+    -- tag = "v2.15", -- uncomment to pin to a specific release
+    init = function()
+      -- VimTeX configuration goes here, e.g.
+      vim.g.vimtex_view_method = 'zathura'
+    end,
+  },
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
@@ -376,7 +389,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
+      vim.keymap.set('n', '<leader>sR', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
