@@ -6,7 +6,6 @@ vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
-
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
@@ -81,14 +80,17 @@ vim.o.scrolloff = 10
 vim.o.confirm = true
 vim.o.tabstop = 4
 vim.o.shiftwidth = 0
+vim.o.winborder = 'rounded'
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 --hubert
+vim.keymap.set('i', 'ZZ', '<Esc>:w<cr>:q<cr>')
 vim.keymap.set('n', '<leader>ec', ':e $MYVIMRC<cr>', { desc = '[E]dit [C]onfig' })
 vim.keymap.set('n', '<leader>g', ':Ex<cr>', { desc = '[F]inder' })
 vim.keymap.set('n', '<leader>sr', ':%s/1/1/g', { desc = '[S]earch [R]eplace' })
-vim.keymap.set('n', '<leader>sm', '::setlocal spell spelllang=en_gb<CR>', { desc = '[S]earch [M]istakes' })
+vim.keymap.set('n', '<leader>sm', '::setlocal spell spelllang=en,pl<CR>', { desc = '[S]earch [M]istakes("]s","z=")' })
 vim.keymap.set('n', '<leader>pp', ':w<CR>:term uv run %<CR>', { noremap = false, silent = true })
+vim.keymap.set('n', '<leader>ll', ':w<CR>:term xelatex %<CR>', { noremap = false, silent = true })
 vim.keymap.set('n', '<leader>pi', ':w<CR>:term uv run < input %<CR>', { noremap = false, silent = true })
 vim.keymap.set('n', '<leader>pu', ':w<CR>:term gcc % -o a && ./a<CR>', { noremap = false, silent = true })
 -- Clear highlights on search when pressing <Esc> in normal mode
@@ -304,15 +306,6 @@ require('lazy').setup({
     opts = {
       picker_integration = true,
     },
-  },
-  {
-    'lervag/vimtex',
-    lazy = false, -- we don't want to lazy load VimTeX
-    -- tag = "v2.15", -- uncomment to pin to a specific release
-    init = function()
-      -- VimTeX configuration goes here, e.g.
-      vim.g.vimtex_view_method = 'zathura'
-    end,
   },
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
