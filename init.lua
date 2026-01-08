@@ -84,15 +84,17 @@ vim.o.winborder = 'rounded'
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 --hubert
-vim.keymap.set('i', 'ZZ', '<Esc>:w<cr>:q<cr>')
+vim.keymap.set({ 'i', 't' }, 'ZZ', '<Esc>:w<cr>:q<cr>')
 vim.keymap.set('n', '<leader>ec', ':e $MYVIMRC<cr>', { desc = '[E]dit [C]onfig' })
 vim.keymap.set('n', '<leader>g', ':Ex<cr>', { desc = '[F]inder' })
 vim.keymap.set('n', '<leader>sr', ':%s/1/1/g', { desc = '[S]earch [R]eplace' })
 vim.keymap.set('n', '<leader>sm', '::setlocal spell spelllang=en,pl<CR>', { desc = '[S]earch [M]istakes("]s","z=")' })
 vim.keymap.set('n', '<leader>pp', ':w<CR>:term uv run %<CR>', { noremap = false, silent = true })
 vim.keymap.set('n', '<leader>ll', ':w<CR>:term xelatex %<CR>', { noremap = false, silent = true })
-vim.keymap.set('n', '<leader>pi', ':w<CR>:term uv run < input %<CR>', { noremap = false, silent = true })
+vim.keymap.set('n', '<leader>pi', ':w<CR>:term python3 < input %<CR>', { noremap = false, silent = true })
 vim.keymap.set('n', '<leader>pu', ':w<CR>:term gcc % -o a && ./a<CR>', { noremap = false, silent = true })
+vim.keymap.set('n', '<leader>pc', ':w<CR>:term g++ % -o a && ./a<CR>', { noremap = false, silent = true })
+vim.keymap.set('n', '<leader>pC', ':w<CR>:term g++ % -o a && ./a < input<CR>', { noremap = false, silent = true })
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
