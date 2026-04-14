@@ -1,4 +1,4 @@
--- Set <space> as the leader key
+-- Set <space> as the leader keynode
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
@@ -89,12 +89,7 @@ vim.keymap.set('n', '<leader>ec', ':e $MYVIMRC<cr>', { desc = '[E]dit [C]onfig' 
 vim.keymap.set('n', '<leader>g', ':Ex<cr>', { desc = '[F]inder' })
 vim.keymap.set('n', '<leader>sr', ':%s/1/1/g', { desc = '[S]earch [R]eplace' })
 vim.keymap.set('n', '<leader>sm', '::setlocal spell spelllang=en,pl<CR>', { desc = '[S]earch [M]istakes("]s","z=")' })
-vim.keymap.set('n', '<leader>pp', ':w<CR>:term uv run %<CR>', { noremap = false, silent = true })
-vim.keymap.set('n', '<leader>ll', ':w<CR>:term xelatex %<CR>', { noremap = false, silent = true })
-vim.keymap.set('n', '<leader>pi', ':w<CR>:term python3 < input %<CR>', { noremap = false, silent = true })
-vim.keymap.set('n', '<leader>pu', ':w<CR>:term gcc % -o a && ./a<CR>', { noremap = false, silent = true })
-vim.keymap.set('n', '<leader>pc', ':w<CR>:term g++ % -o a && ./a<CR>', { noremap = false, silent = true })
-vim.keymap.set('n', '<leader>pC', ':w<CR>:term g++ % -o a && ./a < input<CR>', { noremap = false, silent = true })
+-- vim.keymap.set('n', '<leader>pl', ':w<CR>:term swipl %<CR>', { noremap = false, silent = true })
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -219,7 +214,68 @@ require('lazy').setup({
     ---@type render.md.UserConfig
     opts = {},
   },
+  ---
 
+  ---
+  {
+    'Aietes/esp32.nvim',
+    name = 'esp32.nvim',
+    dependencies = {
+      'folke/snacks.nvim',
+    },
+    opts = {
+      build_dir = 'build.clang',
+    },
+    config = function(_, opts)
+      require('esp32').setup(opts)
+    end,
+    keys = {
+      {
+        '<leader>RM',
+        function()
+          require('esp32').pick 'monitor'
+        end,
+        desc = 'ESP32: Pick & Monitor',
+      },
+      {
+        '<leader>Rm',
+        function()
+          require('esp32').command 'monitor'
+        end,
+        desc = 'ESP32: Monitor',
+      },
+      {
+        '<leader>RF',
+        function()
+          require('esp32').pick 'flash'
+        end,
+        desc = 'ESP32: Pick & Flash',
+      },
+      {
+        '<leader>Rf',
+        function()
+          require('esp32').command 'flash'
+        end,
+        desc = 'ESP32: Flash',
+      },
+      {
+        '<leader>Rc',
+        function()
+          require('esp32').command 'menuconfig'
+        end,
+        desc = 'ESP32: Configure',
+      },
+      {
+        '<leader>RC',
+        function()
+          require('esp32').command 'clean'
+        end,
+        desc = 'ESP32: Clean',
+      },
+      { '<leader>Rr', ':ESPReconfigure<CR>', desc = 'ESP32: Reconfigure project' },
+      { '<leader>Ri', ':ESPInfo<CR>', desc = 'ESP32: Project Info' },
+    },
+  },
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -282,6 +338,8 @@ require('lazy').setup({
       --hubert2
       spec = {
         { '<leader>s', group = '[S]earch' },
+        { '<leader>s', group = '[E]dit' },
+        { '<leader>p', group = '[P]program' },
         { '<leader>e', group = '[E]dit' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
@@ -295,20 +353,20 @@ require('lazy').setup({
   -- you do for a plugin at the top level, you can do for a dependency.
   --
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
-  {
-    'benomahony/uv.nvim',
-    -- Optional filetype to lazy load when you open a python file
-    -- ft = { python }
-    -- Optional dependency, but recommended:
-    -- dependencies = {
-    --   "folke/snacks.nvim"
-    -- or
-    --   "nvim-telescope/telescope.nvim"
-    -- },
-    opts = {
-      picker_integration = true,
-    },
-  },
+  -- {
+  --   'benomahony/uv.nvim',
+  --   -- Optional filetype to lazy load when you open a python file
+  --   -- ft = { python }
+  --   -- Optional dependency, but recommended:
+  --   -- dependencies = {
+  --   --   "folke/snacks.nvim"
+  --   -- or
+  --   --   "nvim-telescope/telescope.nvim"
+  --   -- },
+  --   opts = {
+  --     picker_integration = true,
+  --   },
+  -- },
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
@@ -380,6 +438,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', 'ls', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -388,7 +447,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
-      -- Slightly advanced example of overriding default behavior and theme
+      -- Slightly advanced example of overriding default behavior and themegrep
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
@@ -429,6 +488,12 @@ require('lazy').setup({
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
+    opts = function(_, opts)
+      local esp32 = require 'esp32'
+      opts.servers = opts.servers or {}
+      opts.servers.clangd = esp32.lsp_config()
+      return opts
+    end,
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
@@ -720,6 +785,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
+        cpp = { 'uncrustify' },
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
@@ -837,7 +903,7 @@ require('lazy').setup({
     config = function()
       ---@diagnostic disable-next-line: missing-fields
       require('tokyonight').setup {
-        transparent = true,
+        transparent = false,
         styles = {
           sidebars = 'transparent',
           floats = 'transparent',
