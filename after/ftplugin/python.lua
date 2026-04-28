@@ -1,18 +1,2 @@
 vim.keymap.set('n', '<leader>p', ':w<CR>:term uv run %<CR>', { noremap = false, silent = true })
 -- vim.keymap.set('n', '<leader>pi', ':w<CR>:term python3 < input %<CR>', { noremap = false, silent = true })
--- require('lazy').load {
---   {
---     'benomahony/uv.nvim',
---     -- Optional filetype to lazy load when you open a python file
---     -- ft = { python }
---     -- Optional dependency, but recommended:
---     -- dependencies = {
---     --   "folke/snacks.nvim"
---     -- or
---     --   "nvim-telescope/telescope.nvim"
---     -- },
---     opts = {
---       picker_integration = true,
---     },
---   },
--- }

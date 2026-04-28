@@ -1,9 +1,8 @@
--- Set <space> as the leader keynode
+--c Set <space> as the leader keynode
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 -- [[ Setting options ]]
@@ -85,7 +84,7 @@ vim.o.winborder = 'rounded'
 --  See `:help vim.keymap.set()`
 --hubert
 vim.keymap.set({ 'i', 't' }, 'ZZ', '<Esc>:w<cr>:q<cr>')
-vim.keymap.set('n', '<leader>ec', ':e $MYVIMRC<cr>', { desc = '[E]dit [C]onfig' })
+vim.keymap.set('n', '<leader>e', ':e $MYVIMRC<cr>', { desc = '[E]dit' })
 vim.keymap.set('n', '<leader>g', ':Ex<cr>', { desc = '[F]inder' })
 vim.keymap.set('n', '<leader>sr', ':%s/1/1/g', { desc = '[S]earch [R]eplace' })
 vim.keymap.set('n', '<leader>sm', '::setlocal spell spelllang=en,pl<CR>', { desc = '[S]earch [M]istakes("]s","z=")' })
@@ -140,6 +139,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'GitConflictDetected',
+  callback = function()
+    vim.notify '[C]hose = [O]urs , [T]heir , [B]oth , [N]one {[x ,]x}'
+  end,
+})
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -190,7 +195,6 @@ require('lazy').setup({
   --
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`.
-  --
   -- See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -206,19 +210,13 @@ require('lazy').setup({
   },
   --hubert3
   {
-    'MeanderingProgrammer/render-markdown.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' }, -- if you use the mini.nvim suite
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' }, -- if you use standalone mini plugins
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-    ---@module 'render-markdown'
-    ---@type render.md.UserConfig
-    opts = {},
+    'akinsho/git-conflict.nvim',
+    version = '*',
+    config = true,
   },
-  ---
-
-  ---
   {
     'Aietes/esp32.nvim',
+    ft = { 'c' },
     name = 'esp32.nvim',
     dependencies = {
       'folke/snacks.nvim',
@@ -338,9 +336,7 @@ require('lazy').setup({
       --hubert2
       spec = {
         { '<leader>s', group = '[S]earch' },
-        { '<leader>s', group = '[E]dit' },
         { '<leader>p', group = '[P]program' },
-        { '<leader>e', group = '[E]dit' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
@@ -353,20 +349,18 @@ require('lazy').setup({
   -- you do for a plugin at the top level, you can do for a dependency.
   --
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
-  -- {
-  --   'benomahony/uv.nvim',
-  --   -- Optional filetype to lazy load when you open a python file
-  --   -- ft = { python }
-  --   -- Optional dependency, but recommended:
-  --   -- dependencies = {
-  --   --   "folke/snacks.nvim"
-  --   -- or
-  --   --   "nvim-telescope/telescope.nvim"
-  --   -- },
-  --   opts = {
-  --     picker_integration = true,
-  --   },
-  -- },
+  {
+    'benomahony/uv.nvim',
+    -- Optional filetype to lazy load when you open a python file
+    ft = { 'python' },
+    -- Optional dependency, but recommended:
+    dependencies = {
+      'folke/snacks.nvim' or 'nvim-telescope/telescope.nvim',
+    },
+    opts = {
+      picker_integration = true,
+    },
+  },
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
@@ -446,7 +440,6 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sR', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-
       -- Slightly advanced example of overriding default behavior and themegrep
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
@@ -477,7 +470,7 @@ require('lazy').setup({
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
     -- used for completion, annotations and signatures of Neovim apis
     'folke/lazydev.nvim',
-    ft = 'lua',
+    ft = { 'lua' },
     opts = {
       library = {
         -- Load luvit types when the `vim.uv` word is found
@@ -488,12 +481,6 @@ require('lazy').setup({
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
-    opts = function(_, opts)
-      local esp32 = require 'esp32'
-      opts.servers = opts.servers or {}
-      opts.servers.clangd = esp32.lsp_config()
-      return opts
-    end,
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
@@ -508,6 +495,11 @@ require('lazy').setup({
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
     },
+    opts = function(_, opts)
+      opts.servers = opts.servers or {}
+      opts.servers.clangd = require('esp32').lsp_config()
+      return opts
+    end,
     config = function()
       -- Brief aside: **What is LSP?**
       --
@@ -687,7 +679,9 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {
+          require('esp32').lsp_config(),
+        },
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -736,7 +730,7 @@ require('lazy').setup({
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
-        ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
+        ensure_installed = { 'clangd' }, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
         handlers = {
           function(server_name)
@@ -797,7 +791,7 @@ require('lazy').setup({
   { -- Autocompletion
     'saghen/blink.cmp',
     event = 'VimEnter',
-    version = '1.*',
+    version = '*',
     dependencies = {
       -- Snippet Engine
       {
@@ -816,12 +810,12 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          },
         },
         opts = {},
       },
@@ -853,7 +847,6 @@ require('lazy').setup({
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
         preset = 'default',
-
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
       },
