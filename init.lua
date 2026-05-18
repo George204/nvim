@@ -361,6 +361,15 @@ require('lazy').setup({
       picker_integration = true,
     },
   },
+  -- lazy.nvim
+  {
+    'azratul/live-share.nvim',
+    config = function()
+      require('live-share').setup {
+        username = 'hubert',
+      }
+    end,
+  },
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
